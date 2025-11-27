@@ -75,7 +75,7 @@ function App() {
             Genesee Hill Giving Tree
           </h1>
           <p className="text-xl md:text-2xl text-red-100 max-w-2xl mx-auto font-festive">
-            Spread joy this season by helping a family in need.
+            Spread joy this season by helping Mary's Place collect gifts for children in need.
           </p>
         </div>
       </header>
