@@ -11,7 +11,7 @@ admin.initializeApp({
 });
 
 const db = admin.database();
-const ref = db.ref('wishlist_items'); // The main node where the items will live
+const ref = db.ref('gifts'); // The main node where the items will live
 
 // 🛑 STEP 1: DEFINE ONLY THE *NEW* ITEMS 
 // Ensure all original items (like "LEGOs" or "Soccer balls") are removed from this list!
