@@ -74,7 +74,7 @@ function App() {
           <h1 className="text-5xl md:text-7xl font-festive font-bold mb-4 drop-shadow-md">
             Genesee Hill Giving Tree
           </h1>
-          <p className="text-xl md:text-2xl text-red-100 max-w-2xl mx-auto font-festive">
+          <p className="text-xl md:text-2xl text-red-100 max-w-2xl mx-auto font-sans font-bold">
             Spread joy this season by helping Mary's Place collect gifts for children in need.
           </p>
         </div>
@@ -111,7 +111,7 @@ function App() {
                   <div className="bg-green-100 p-2 rounded-full mr-4 text-green-700">
                     <MapPin size={20} />
                   </div>
-                  <span><span className="font-bold">4. Delivery!</span> We will deliver to Mary's Place in time for Christmas cheer.</span>
+                  <span><span className="font-bold">4. Delivery!</span> We will deliver to Mary's Place in time for Christmas cheer. If you would rather donate money directly to Mary's place, please click <a href="https://give.marysplaceseattle.org/campaign/616506/donate">HERE.</a> </span>
                 </li>
               </ul>
             </div>
