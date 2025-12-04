@@ -2,58 +2,23 @@ import { Gift, ClaimRequest } from '../types';
 
 const BASE_URL = 'https://studio-5465966901-bc5e2-default-rtdb.firebaseio.com/gifts';
 
-export const fetchGifts = async (): Promise<Gift[]> => {
-  try {
-    const response = await fetch(`${BASE_URL}.json`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch gifts');
-    }
-    const data = await response.json();
-    if (!data) return [];
-
-    // Convert object map to array, assign IDs, and FILTER out claimed gifts
-    return Object.entries(data)
-      .filter(([key, value]: [string, any]) => !value.isClaimed) // Filters out claimed gifts
-      .map(([key, value]: [string, any]) => ({
-        id: key,
-        name: value.name || 'Unknown Gift',
-        description: value.description || 'A surprise gift',
-        type: value.type || 'other'
-      }));
-  } catch (error) {
-    console.error('Error fetching gifts:', error);
-    return [];
-  }
-};
-
 export const claimGift = async (request: ClaimRequest): Promise<boolean> => {
   try {
-    // 1. UPDATE: Change isClaimed to true AND record claimer's details
+    // 1. UPDATE: Change isClaimed to true (Patch Firebase)
     const updateResponse = await fetch(`${BASE_URL}/${request.giftId}.json`, {
       method: 'PATCH', // Changed from 'DELETE' to 'PATCH'
-      headers: {
+      headers: { // Added headers
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
+      body: JSON.stringify({ // Added body to specify the update
         isClaimed: true,
-        claimerName: request.claimerName, // Record claimer's name
-        claimerEmail: request.claimerEmail, // Record claimer's email
       }),
     });
 
-    if (!updateResponse.ok) {
-      console.error("Failed to update claim status and details in DB");
+    if (!updateResponse.ok) { // Check the response from the PATCH request
+      console.error("Failed to set isClaimed to true in DB");
       return false;
     }
-
-    // 2. Simulate email sending via mailto... (Logic remains)
-    
-    return true;
-  } catch (error) {
-    console.error('Error claiming gift:', error);
-    return false;
-  }
-};
 
     // 2. Simulate email sending via mailto since we don't have a backend mailer
     const subject = encodeURIComponent(`Gift Claimed: ${request.giftName}`);
