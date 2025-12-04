@@ -13,7 +13,7 @@ export const fetchGifts = async (): Promise<Gift[]> => {
 
     // Convert object map to array, assign IDs, and FILTER out claimed gifts
     return Object.entries(data)
-      .filter(([key, value]: [string, any]) => !value.isClaimed) 
+      .filter(([key, value]: [string, any]) => !value.isClaimed) // Filters out claimed gifts
       .map(([key, value]: [string, any]) => ({
         id: key,
         name: value.name || 'Unknown Gift',
@@ -30,14 +30,14 @@ export const claimGift = async (request: ClaimRequest): Promise<boolean> => {
   try {
     // 1. UPDATE: Change isClaimed to true AND record claimer's details
     const updateResponse = await fetch(`${BASE_URL}/${request.giftId}.json`, {
-      method: 'PATCH',
+      method: 'PATCH', // Changed from 'DELETE' to 'PATCH'
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         isClaimed: true,
-        claimerName: request.claimerName,
-        claimerEmail: request.claimerEmail,
+        claimerName: request.claimerName, // Record claimer's name
+        claimerEmail: request.claimerEmail, // Record claimer's email
       }),
     });
 
@@ -54,18 +54,6 @@ export const claimGift = async (request: ClaimRequest): Promise<boolean> => {
     return false;
   }
 };
-
-export const claimGift = async (request: ClaimRequest): Promise<boolean> => {
-  try {
-    // 1. Remove from tree (Delete from Firebase)
-    const deleteResponse = await fetch(`${BASE_URL}/${request.giftId}.json`, {
-      method: 'DELETE',
-    });
-
-    if (!deleteResponse.ok) {
-      console.error("Failed to delete from DB");
-      return false;
-    }
 
     // 2. Simulate email sending via mailto since we don't have a backend mailer
     const subject = encodeURIComponent(`Gift Claimed: ${request.giftName}`);
