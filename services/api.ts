@@ -11,16 +11,47 @@ export const fetchGifts = async (): Promise<Gift[]> => {
     const data = await response.json();
     if (!data) return [];
 
-    // Convert object map to array and assign IDs
-    return Object.entries(data).map(([key, value]: [string, any]) => ({
-      id: key,
-      name: value.name || 'Unknown Gift',
-      description: value.description || 'A surprise gift',
-      type: value.type || 'other'
-    }));
+    // Convert object map to array, assign IDs, and FILTER out claimed gifts
+    return Object.entries(data)
+      .filter(([key, value]: [string, any]) => !value.isClaimed) 
+      .map(([key, value]: [string, any]) => ({
+        id: key,
+        name: value.name || 'Unknown Gift',
+        description: value.description || 'A surprise gift',
+        type: value.type || 'other'
+      }));
   } catch (error) {
     console.error('Error fetching gifts:', error);
     return [];
+  }
+};
+
+export const claimGift = async (request: ClaimRequest): Promise<boolean> => {
+  try {
+    // 1. UPDATE: Change isClaimed to true AND record claimer's details
+    const updateResponse = await fetch(`${BASE_URL}/${request.giftId}.json`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        isClaimed: true,
+        claimerName: request.claimerName,
+        claimerEmail: request.claimerEmail,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      console.error("Failed to update claim status and details in DB");
+      return false;
+    }
+
+    // 2. Simulate email sending via mailto... (Logic remains)
+    
+    return true;
+  } catch (error) {
+    console.error('Error claiming gift:', error);
+    return false;
   }
 };
 
